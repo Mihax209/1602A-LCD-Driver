@@ -18,10 +18,14 @@ void setup()
 {
     uint8_t D_pin_mapping[] = { D0, D1, D2, D3, D4, D5, D6, D7 };
 
+    Serial.begin(115200);
+
     LCD_setup(RS, RW, E, D_pin_mapping);
     LCD_init();
     delay(5);
-    LCD_test_write();
+    String s = "blyat blyat cyka blyat";
+    LCD_write_string(s);
+    // LCD_test_write();
 }
 
 void loop()

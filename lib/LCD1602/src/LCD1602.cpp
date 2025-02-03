@@ -8,7 +8,7 @@ enum setup_state g_setup_state = UNINITIALIZED;
 struct pin_data g_pin_data = {};  // to reduce stack overhead
 
 // TODO how to elegantly change the d array to be safe size-wise?
-void LCD_setup(uint8_t rs, uint8_t rw, uint8_t e, uint8_t d[LCD_DATA_PIN_COUNT])
+void LCD_setup(uint8_t rs, uint8_t rw, uint8_t e, uint8_t *d)
 {
     g_pin_mappings.RS = rs; pinMode(g_pin_mappings.RS, OUTPUT);
     g_pin_mappings.RW = rw; pinMode(g_pin_mappings.RW, OUTPUT);
@@ -16,7 +16,7 @@ void LCD_setup(uint8_t rs, uint8_t rw, uint8_t e, uint8_t d[LCD_DATA_PIN_COUNT])
 
     pinMode(DBG_PIN, OUTPUT);
 
-    for (int i = 0; i < LCD_DATA_PIN_COUNT; ++i)
+    for (unsigned int i = 0; i < LCD_DATA_PIN_COUNT; ++i)
     {
         g_pin_mappings.D[i] = d[i]; pinMode(g_pin_mappings.D[i], OUTPUT);
     }
@@ -52,12 +52,6 @@ bool LCD_init(void)
     send_clear_display(&g_pin_mappings, &g_pin_data);
     send_entry_mode_set(&g_pin_mappings, &g_pin_data, true);
 
-    g_setup_state = INITIALIZED;
-    return true;
-}
-
-void LCD_test_write(void)
-{
     /* 2 lines */
     send_function_set(&g_pin_mappings, &g_pin_data, true, true, false);
     /* turn off display */
@@ -66,6 +60,23 @@ void LCD_test_write(void)
     send_display_on_off(&g_pin_mappings, &g_pin_data, true, true, true);
     send_entry_mode_set(&g_pin_mappings, &g_pin_data, true);
 
+
+    g_setup_state = INITIALIZED;
+    return true;
+}
+
+void LCD_write_string(String str)
+{
+    for (unsigned int i = 0; i < str.length(); ++i)
+    {
+        Serial.print(str.charAt(i)); Serial.print(' '); Serial.print((uint8_t)str.charAt(i));
+        send_write_data(&g_pin_mappings, &g_pin_data, (uint8_t)str.charAt(i));
+        delay(200);
+    }
+}
+
+void LCD_test_write(void)
+{
     /* S */
     send_write_data(&g_pin_mappings, &g_pin_data, 0b01010011);
 
