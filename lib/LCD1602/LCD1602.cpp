@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Mihax_LCD1602.h"
+#include "LCD1602.h"
 
 // TODO how to setup debug pin?
 #define DBG_PIN (13)

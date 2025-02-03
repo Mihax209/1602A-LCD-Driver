@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <Mihax_LCD1602.h>
+#include <LCD1602.h>
 
 #define D0  (5)
 #define D1  (6)
