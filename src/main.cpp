@@ -16,10 +16,11 @@
 
 void setup()
 {
-    uint8_t D_pin_mapping[] = { D7, D6, D5, D4, D3, D2, D1, D0 };
+    uint8_t D_pin_mapping[] = { D0, D1, D2, D3, D4, D5, D6, D7 };
 
     LCD_setup(RS, RW, E, D_pin_mapping);
     LCD_init();
+    delay(5);
     LCD_test_write();
 }
 

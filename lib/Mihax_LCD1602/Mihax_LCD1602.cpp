@@ -25,8 +25,8 @@ enum setup_state {
 
 /* GLOBALS */
 struct pin_mapping g_pin_mappings = {};
-enum setup_state g_setup_state = UNINITIALIZED;
 struct pin_data g_pin_data = {};  // to reduce stack overhead
+enum setup_state g_setup_state = UNINITIALIZED;
 
 inline uint8_t get_pin_value(uint16_t num, int idx)
 {
@@ -84,7 +84,7 @@ void binary_to_D_array(uint8_t value, uint8_t *D_array)
     {
         /* NOTE MSb is the last array entry, i.e. D7 == D[7] */
         uint8_t mask = (1 << i) & value;
-        D_array[i] = (mask == 0) ? 0 : 1;
+        D_array[i] = (mask != 0) ? 1 : 0;
     }
 }
 
@@ -196,14 +196,14 @@ void send_write_data(struct pin_data *pin_data, uint8_t data)
 void LCD_setup(uint8_t rs, uint8_t rw, uint8_t e, uint8_t d[LCD_DATA_PIN_COUNT])
 {
     g_pin_mappings.RS = rs; pinMode(g_pin_mappings.RS, OUTPUT);
-    g_pin_mappings.RW = rw; pinMode(g_pin_mappings.RS, OUTPUT);
+    g_pin_mappings.RW = rw; pinMode(g_pin_mappings.RW, OUTPUT);
     g_pin_mappings.E = e;   pinMode(g_pin_mappings.E, OUTPUT);
 
     pinMode(DBG_PIN, OUTPUT);
 
     for (int i = 0; i < LCD_DATA_PIN_COUNT; ++i)
     {
-
+        g_pin_mappings.D[i] = d[i]; pinMode(g_pin_mappings.D[i], OUTPUT);
     }
 
     g_setup_state = SETUP_DONE;
